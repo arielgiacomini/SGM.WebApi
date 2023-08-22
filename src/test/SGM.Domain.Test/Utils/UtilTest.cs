@@ -12,16 +12,16 @@ namespace SGM.Domain.Test.Utils
 
         }
 
-        [TestCase("100,00")]
-        [TestCase("100.00")]
-        [TestCase("100")]
-        [TestCase("1")]
-        [TestCase("R$ 100,00")]
-        public void VerificaSeEhNumero_VerificaSeEhNumeroDecimal(string valorTestCase)
+        [TestCase("100,00", true)]
+        [TestCase("100.00", true)]
+        [TestCase("100", true)]
+        [TestCase("1", true)]
+        [TestCase("R$ 100,00", false)]
+        public void VerificaSeEhNumero_VerificaSeEhNumeroDecimal(string valorTestCase, bool ehNumber)
         {
             var formasPagamento = Util.VerificaSeEhNumero(valorTestCase);
 
-            formasPagamento.Should().Be(true);
+            formasPagamento.Should().Be(ehNumber);
         }
 
         [TestCase("100,00", 100.00)]
