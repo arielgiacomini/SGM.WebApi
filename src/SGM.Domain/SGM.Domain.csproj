@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Version>2.0.0</Version>
+    <Authors>Ariel Giacomini</Authors>
+    <Company>Giacomini Software House</Company>
+    <RepositoryUrl>https://github.com/arielgiacomini/GerencimentoMecanicaAPI</RepositoryUrl>
+    <RepositoryType>gitHub</RepositoryType>
+    <NeutralLanguage>pt-BR</NeutralLanguage>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <PackageId>Giacomini.SGM.Domain</PackageId>
+    <Description>25/12/2021 - Ariel Giacomini - Versão 2.0.0 correção de bug ao passar valor percentual com caractere percentil, na devolutiva de número tinha uma condição incorreta.</Description>
+    <Copyright>2018-2019-2020-2021</Copyright>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+  </ItemGroup>
+
+</Project>
