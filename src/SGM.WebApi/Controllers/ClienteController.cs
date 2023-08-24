@@ -80,6 +80,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[ Atualizar]  - Atualizar cliente ID {clienteId} com o objeto:{JsonSerializer.Serialize(model)}");
                 model.ClienteId = clienteId;
                 _clienteServices.Atualizar(model);
                 return Ok();
