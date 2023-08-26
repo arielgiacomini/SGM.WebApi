@@ -132,6 +132,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+
                 var cliente = _clienteServices.GetClienteByPlacaVeiculo(placaVeiculo);
                 return Ok(cliente);
             }
