@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog.Core;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
