@@ -15,7 +15,7 @@ namespace SGM.WebApi.Controllers
         private readonly Serilog.ILogger _logger;
         private readonly IClienteServices _clienteServices;
 
-        public ClienteController(Serilog.ILogger logger, 
+        public ClienteController(Serilog.ILogger logger,
             IClienteServices clienteServices)
         {
             _logger = logger;
@@ -28,13 +28,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information("[GetClientesForAll] - Solicitação de Todos os Clientes");
+                _logger.Information("[ClienteController.GetClientesForAll] - Solicitação para buscar Todos os Clientes");
+
                 var clientes = _clienteServices.GetByAll();
+                
                 return Ok(clientes);
             }
             catch (Exception ex)
             {
-                _logger.Error("[GetClientesForAll]", ex);
+                _logger.Error("[ClienteController.GetClientesForAll] - Erro ao efetuar a chamada para Buscar todos os clientes: ", ex);
+
                 return StatusCode(500, ex);
             }
         }
@@ -45,13 +48,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[GetClientesById] - Solicitação de um cliente: {clienteId} ");
+                _logger.Information($"[ClienteController.GetClientesById] - Solicitando a busca do cliente com Id: {clienteId}");
+
                 var clientes = _clienteServices.GetById(clienteId);
+
                 return Ok(clientes);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[GetClientesById] - Erro ao efetuar o Get para o cliente {clienteId} error:{ex.Message}");
+                _logger.Error(ex, $"[ClienteController.GetClientesById] - Erro ao efetuar a busca do cliente com o Id: {clienteId} Erro: {ex.Message}");
+                
                 return StatusCode(500, ex);
             }
         }
@@ -62,15 +68,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[ClienteController.Salvar] - Solicitação para salvar o cliente: {JsonSerializer.Serialize(model)}");
+
                 var clienteId = _clienteServices.Salvar(model);
 
-                _logger.Information($"[Salvar] - Cliente Salvo: {JsonSerializer.Serialize(model)}");
-                
                 return Created("", clienteId);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[Salvar] - Erro ao Salvar Cliente: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.Salvar] - Erro ao ao tentar Salvar o Cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
+                
                 return StatusCode(500, ex);
             }
         }
@@ -81,14 +88,17 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[ Atualizar]  - Atualizar cliente ID {clienteId} com o objeto:{JsonSerializer.Serialize(model)}");
+                _logger.Information($"[ClienteController.Atualizar] - Solicitação para Atualizar o Cliente de Id: {clienteId} com as seguintes informações: {JsonSerializer.Serialize(model)}");
+                
                 model.ClienteId = clienteId;
                 _clienteServices.Atualizar(model);
+                
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[Atualizar] - Erro ao atualizar: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.Atualizar] - Erro ao ao tentar Atualizar o Cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
+                
                 return StatusCode(500, ex);
             }
         }
@@ -99,16 +109,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[GetClienteByDocumentoCliente] - Buscar um cliente a partir do documento:{documentoCliente}");
+                _logger.Information($"[ClienteController.GetClienteByDocumentoCliente] - Solicitação para buscar um cliente a partir do seu documento: {documentoCliente}");
 
                 var cliente = _clienteServices.GetClienteByDocumentoCliente(documentoCliente);
 
-                
                 return Ok(cliente);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[GetClienteByDocumentoCliente] - Erro ao buscar documento: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.GetClienteByDocumentoCliente] - Erro ao efetuar a busca do cliente a partir do seu documento: {documentoCliente} Erro: {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
@@ -119,13 +129,15 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[inativar cliente] -  Salvar ao inativar cliente {clienteId}");
+                _logger.Information($"[ClienteController.InativarCliente] - Solicitação para inativar um cliente a partir do seu Id: {clienteId}");
+
                 _clienteServices.InativarCliente(clienteId);
+
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[Inativar cliente] - Erro ao inativar o cliente: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.InativarCliente] - Erro ao efetuar a inativação do cliente a partir do seu Id: {clienteId} Erro: {ex.Message}");
 
                 return StatusCode(500, ex);
             }
@@ -137,25 +149,29 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[GetClienteByPlaca] - Buscar Placa do veiculo {placaVeiculo}");
+                _logger.Information($"[ClienteController.GetClienteByPlaca] - Solicitação para buscar um cliente a partir da placa do seu veiculo: {placaVeiculo}");
+
                 var cliente = _clienteServices.GetClienteByPlacaVeiculo(placaVeiculo);
+                
                 return Ok(cliente);
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[GetClienteByPlaca] - Erro a buscar placa do veiculo: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.GetClienteByPlaca] - Erro ao efetuar a busca um cliente a partir da placa do seu veiculo: {placaVeiculo} Erro: {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
 
         [HttpGet]
         [Route("cliente/placa-or-nome-or-apelido")]
-        public IActionResult GetClienteByLikePlacaOrNomeOrApelido(string valor)
+        public IActionResult GetClienteByLikePlacaOrNomeOrApelido(string placaNomeOrApelido)
         {
             try
             {
-                _logger.Information($"[GetClienteByLikePlacaOrNomeOrApelido] -  Buscar Cliente, Nome, Placa, Apelido {valor} ");
-                var cliente = _clienteServices.GetClienteByLikePlacaOrNomeOrApelido(valor);
+                _logger.Information($"[ClienteController.GetClienteByLikePlacaOrNomeOrApelido] - Solicitação para buscar um cliente a partir da placa, nome ou apelido: {placaNomeOrApelido}");
+
+                var cliente = _clienteServices.GetClienteByLikePlacaOrNomeOrApelido(placaNomeOrApelido);
 
                 if (cliente.ClienteId == 0)
                 {
@@ -166,7 +182,8 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[GetClienteByLikePlacaOrNomeOrApelido] - Erro ao buscar Cliente, Nome, Placa, Apelido {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.GetClienteByLikePlacaOrNomeOrApelido] - Erro ao efetuar a busca um cliente a partir da placa, nome ou apelido: {placaNomeOrApelido} Erro: {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
