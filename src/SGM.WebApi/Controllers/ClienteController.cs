@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog.Core;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
@@ -87,6 +88,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[Atualizar] - Erro ao atualizar: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -117,11 +119,14 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[inativar cliente] -  Salvar ao inativar cliente {clienteId}");
                 _clienteServices.InativarCliente(clienteId);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[Inativar cliente] - Erro ao inativar o cliente: {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
@@ -132,12 +137,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-
+                _logger.Information($"[GetClienteByPlaca] - Buscar Placa do veiculo {placaVeiculo}");
                 var cliente = _clienteServices.GetClienteByPlacaVeiculo(placaVeiculo);
                 return Ok(cliente);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[GetClienteByPlaca] - Erro a buscar placa do veiculo: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -148,6 +154,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[GetClienteByLikePlacaOrNomeOrApelido] -  Buscar Cliente, Nome, Placa, Apelido {valor} ");
                 var cliente = _clienteServices.GetClienteByLikePlacaOrNomeOrApelido(valor);
 
                 if (cliente.ClienteId == 0)
@@ -159,6 +166,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[GetClienteByLikePlacaOrNomeOrApelido] - Erro ao buscar Cliente, Nome, Placa, Apelido {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
