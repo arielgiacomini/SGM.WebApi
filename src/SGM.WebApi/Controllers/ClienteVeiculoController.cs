@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Serilog.Core;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
+using System.Text.Json;
 
 namespace SGM.WebApi.Controllers
 {
@@ -10,10 +13,13 @@ namespace SGM.WebApi.Controllers
     [Produces("application/json")]
     public class ClienteVeiculoController : ControllerBase
     {
+        private readonly Serilog.ILogger _logger; 
         private readonly IClienteVeiculoServices _clienteVeiculoServices;
 
-        public ClienteVeiculoController(IClienteVeiculoServices clienteVeiculoServices)
+        public ClienteVeiculoController(Serilog.ILogger logger,
+            IClienteVeiculoServices clienteVeiculoServices)
         {
+           _logger = logger;
             _clienteVeiculoServices = clienteVeiculoServices;
         }
 
@@ -23,11 +29,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information("[ClienteVeiculoController.GetVeiculoClienteByClienteId] Solicitação para buscar todos os Clientes.");
+
                 var clienteVeiculos = _clienteVeiculoServices.GetClienteVeiculoByClienteId(clienteId);
+
                 return Ok(clienteVeiculos);
             }
             catch (Exception ex)
             {
+                _logger.Error("[ClienteVeiculoController.GetVeiculoClienteByClienteId] - Erro ao efetuar a chamada para buscar todos os clientes: ", ex);
+                
                 return StatusCode(500, ex);
             }
         }
