@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
-using Serilog.Core;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
-using System.Text.Json;
 
 namespace SGM.WebApi.Controllers
 {
@@ -29,7 +26,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information("[ClienteVeiculoController.GetVeiculoClienteByClienteId] Solicitação para buscar todos os Clientes.");
+                _logger.Information("[ClienteVeiculoController.GetVeiculoClienteByClienteId] Solicitação para buscar todos os Clienteveiculo");
 
                 var clienteVeiculos = _clienteVeiculoServices.GetClienteVeiculoByClienteId(clienteId);
 
@@ -37,7 +34,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error("[ClienteVeiculoController.GetVeiculoClienteByClienteId] - Erro ao efetuar a chamada para buscar todos os clientes: ", ex);
+                _logger.Error("[ClienteVeiculoController.GetVeiculoClienteByClienteId] - Erro ao efetuar a chamada para buscar todos os Clienteveiculo: ", ex);
                 
                 return StatusCode(500, ex);
             }
@@ -49,11 +46,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[GetVeiculoClienteByPlaca] - Buscar Placa do veiculo: {placa} ");
                 var clienteVeiculo = _clienteVeiculoServices.GetVeiculoClienteByPlaca(placa);
                 return Ok(clienteVeiculo);
             }
             catch (Exception ex)
             {
+                _logger.Error($"[GetVeiculoClienteByPlaca] - Erro ao buscar placa do veiculo:  {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -64,11 +63,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[GetClienteVeiculoByClienteVeiculoId] -  Buscar clienteveiculoID: {clienteVeiculoId}");
                 var clienteVeiculo = _clienteVeiculoServices.GetVeiculoClienteByClienteVeiculoId(clienteVeiculoId);
                 return Ok(clienteVeiculo);
             }
             catch (Exception ex)
             {
+                _logger.Error($"GetClienteVeiculoByClienteVeiculoId - Erro ao buscar clienteveiculoID: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -79,11 +80,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[ClienteveiculoController.Salvar] - Solicitação para salvar o clienteveiculo: {JsonSerializer.Serialize(model)}"); 
                 var clienteVeiculoId = _clienteVeiculoServices.SalvarClienteVeiculo(model);
                 return Created("", clienteVeiculoId);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[ClienteveiculoController.Salvar] - Erro ao tentar salvar o cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
