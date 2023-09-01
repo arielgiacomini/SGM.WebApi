@@ -2,6 +2,7 @@
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
+using System.Text.Json;
 
 namespace SGM.WebApi.Controllers
 {
@@ -52,7 +53,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error($"[GetVeiculoClienteByPlaca] - Erro ao buscar placa do veiculo:  {ex.Message}");
+                _logger.Error($"[GetVeiculoClienteByPlaca] - Erro ao buscar placa do veiculo: {placa} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -86,7 +87,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[ClienteveiculoController.Salvar] - Erro ao tentar salvar o cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
+                _logger.Error(ex, ($"[ClienteveiculoController.Salvar] - Erro ao tentar salvar o cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -97,12 +98,14 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[clienteVeiculoId.Atualizar] - Solicitação para atualizar o clienteveiculoID: {clienteVeiculoId} com as seguintes informações: {JsonSerializer.Serialize(model)}");
                 model.ClienteVeiculoId = clienteVeiculoId;
                 _clienteVeiculoServices.AtualizarClienteVeiculo(model);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error($"[clienteVeiculoId.Atualizar] -  Erro ao tentar atualizar o cliente:  {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -113,11 +116,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[clienteVeiculoId.inativar] - Solicitação para inativar cliente a partir do ID: {clienteVeiculoId} com as segintes informações: {JsonSerializer.Serialize(model)}");
                 _clienteVeiculoServices.InativarClienteVeiculo(clienteVeiculoId);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error($"[clienteVeiculoId.inativar] - Erro ao inativar cliente a partir do ID: {clienteVeiculoId} erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
