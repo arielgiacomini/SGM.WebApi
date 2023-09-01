@@ -72,7 +72,7 @@ namespace SGM.WebApi.Controllers
             {
                 _logger.Error($"GetClienteVeiculoByClienteVeiculoId - Erro ao buscar clienteveiculoID: {ex.Message}");
                 return StatusCode(500, ex);
-            }
+            
         }
 
         [HttpPost]
