@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGM.ApplicationServices.Interfaces;
-using SGM.Domain.Entities;
 using System;
 
 namespace SGM.WebApi.Controllers
@@ -27,7 +26,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[FormaPagamentoController.GetFormaPagamentoForAll] - Solicitação para buscar forma de pagamento") ;
+                _logger.Information($"[FormaPagamentoController.GetFormaPagamentoForAll] - Solicitação para buscar forma de pagamento");
 
                 var formaPagamento = _formaPagamentoServices.GetFormaPagamentoByAll();
 
@@ -47,7 +46,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information($"[FormaPagamentoController.GetFormaPagamentoForById] - Solicitação para buscar a forma de pagamento ID: {formaPagamentoId}"); 
+                _logger.Information($"[FormaPagamentoController.GetFormaPagamentoForById] - Solicitação para buscar a forma de pagamento ID: {formaPagamentoId}");
 
                 var formaPagamento = _formaPagamentoServices.GetFormaPagamentoById(formaPagamentoId);
                 return Ok(formaPagamento);
