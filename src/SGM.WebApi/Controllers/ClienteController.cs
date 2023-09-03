@@ -76,7 +76,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[ClienteController.Salvar] - Erro ao ao tentar Salvar o Cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.Salvar] - Erro ao  tentar Salvar o Cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 
                 return StatusCode(500, ex);
             }
@@ -97,7 +97,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[ClienteController.Atualizar] - Erro ao ao tentar Atualizar o Cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
+                _logger.Error(ex, $"[ClienteController.Atualizar] - Erro ao  tentar Atualizar o Cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 
                 return StatusCode(500, ex);
             }

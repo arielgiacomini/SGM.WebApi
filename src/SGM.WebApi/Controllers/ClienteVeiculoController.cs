@@ -2,6 +2,7 @@
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
+using System.Text.Json;
 
 namespace SGM.WebApi.Controllers
 {
@@ -10,10 +11,13 @@ namespace SGM.WebApi.Controllers
     [Produces("application/json")]
     public class ClienteVeiculoController : ControllerBase
     {
+        private readonly Serilog.ILogger _logger;
         private readonly IClienteVeiculoServices _clienteVeiculoServices;
 
-        public ClienteVeiculoController(IClienteVeiculoServices clienteVeiculoServices)
+        public ClienteVeiculoController(Serilog.ILogger logger,
+            IClienteVeiculoServices clienteVeiculoServices)
         {
+            _logger = logger;
             _clienteVeiculoServices = clienteVeiculoServices;
         }
 
@@ -23,11 +27,17 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[ClienteVeiculoController.GetVeiculoClienteByClienteId] - Solicitação para buscar o veiculo, do cliente ID:{clienteId}");
+
+
                 var clienteVeiculos = _clienteVeiculoServices.GetClienteVeiculoByClienteId(clienteId);
+
                 return Ok(clienteVeiculos);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[ClienteVeiculoController.GetVeiculoClienteByClienteId] - Erro ao efetuar a chamada para buscar todos os Clienteveiculo: ", ex);
+
                 return StatusCode(500, ex);
             }
         }
@@ -38,26 +48,17 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                var clienteVeiculo = _clienteVeiculoServices.GetVeiculoClienteByPlaca(placa);
-                return Ok(clienteVeiculo);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
-        }
+                _logger.Information($"[GetVeiculoClienteByPlaca] - Buscar Placa do veiculo: {placa} ");
 
-        [HttpGet]
-        [Route("cliente-veiculo/id/{clienteVeiculoId}")]
-        public IActionResult GetClienteVeiculoByClienteVeiculoId(int clienteVeiculoId)
-        {
-            try
-            {
-                var clienteVeiculo = _clienteVeiculoServices.GetVeiculoClienteByClienteVeiculoId(clienteVeiculoId);
+                var clienteVeiculo = _clienteVeiculoServices.GetVeiculoClienteByPlaca(placa);
+
+
                 return Ok(clienteVeiculo);
+
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[GetVeiculoClienteByPlaca] - Erro ao buscar placa do veiculo: {placa} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -68,13 +69,34 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[ClienteveiculoController.Salvar] - Solicitação para salvar o clienteveiculo: {JsonSerializer.Serialize(model)}");
                 var clienteVeiculoId = _clienteVeiculoServices.SalvarClienteVeiculo(model);
                 return Created("", clienteVeiculoId);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[ClienteveiculoController.Salvar] - Erro ao tentar salvar o cliente: {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
+        }
+
+        [HttpGet]
+        [Route("cliente-veiculo/id/{clienteVeiculoId}")]
+        public IActionResult GetClienteVeiculoByClienteVeiculoId(int clienteVeiculoId)
+        {
+            try
+            {
+                _logger.Information($"[GetClienteVeiculoByClienteVeiculoId] -  Buscar clienteveiculoID: {clienteVeiculoId}");
+                var clienteVeiculo = _clienteVeiculoServices.GetVeiculoClienteByClienteVeiculoId(clienteVeiculoId);
+                return Ok(clienteVeiculo);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, $"[GetClienteVeiculoByClienteVeiculoId] - Erro ao buscar clienteveiculoID: {ex.Message}");
+                return StatusCode(500, ex);
+
+            }
+
         }
 
         [HttpPut]
@@ -83,12 +105,14 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[clienteVeiculoId.Atualizar] - Solicitação para atualizar o clienteveiculoID: {clienteVeiculoId} com as seguintes informações: {JsonSerializer.Serialize(model)}");
                 model.ClienteVeiculoId = clienteVeiculoId;
                 _clienteVeiculoServices.AtualizarClienteVeiculo(model);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[clienteVeiculoId.Atualizar] -  Erro ao tentar atualizar o cliente:  {JsonSerializer.Serialize(model)} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -99,11 +123,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[clienteVeiculoId.inativar] - Solicitação para inativar cliente a partir do ID: {clienteVeiculoId}");
                 _clienteVeiculoServices.InativarClienteVeiculo(clienteVeiculoId);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[clienteVeiculoId.inativar] - Erro ao inativar cliente a partir do ID: {clienteVeiculoId} erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -116,9 +142,9 @@ namespace SGM.WebApi.Controllers
             try
             {
                 var count = _clienteVeiculoServices.GetCount();
-        
+
                 HttpContext.Response.Headers.Add("X-Total-Count", count.Contagem.ToString());
-        
+
                 var pagina = page;
                 var clienteVeiculos = _clienteVeiculoServices.GetByAllPaginado(page);
                 return Ok(clienteVeiculos);
