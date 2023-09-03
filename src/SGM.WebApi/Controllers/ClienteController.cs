@@ -36,7 +36,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error("[ClienteController.GetClientesForAll] - Erro ao efetuar a chamada para Buscar todos os clientes: ", ex);
+                _logger.Error(ex,$"[ClienteController.GetClientesForAll] - Erro ao efetuar a chamada para Buscar todos os clientes: ", ex);
 
                 return StatusCode(500, ex);
             }
