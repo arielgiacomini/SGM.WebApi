@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
@@ -10,24 +11,31 @@ namespace SGM.WebApi.Controllers
     [Produces("application/json")]
     public class ColaboradorController : ControllerBase
     {
+        private readonly Serilog.ILogger _logger;
         private readonly IColaboradorServices _colaboradorServices;
 
-        public ColaboradorController(IColaboradorServices colaboradorServices)
+        public ColaboradorController(Serilog.ILogger logger,
+            IColaboradorServices colaboradorServices)
         {
+            _logger = logger;
             _colaboradorServices = colaboradorServices;
         }
 
         [HttpGet]
         [Route("colaborador")]
-        public IActionResult GetClientesForAll()
+        public IActionResult GetColaboradorForAll()
         {
             try
             {
+                _logger.Information("[ColaboradorController.GetColaboradorForAll] - Solicitação de todos os colaboradores");
+               
                 var clientes = _colaboradorServices.GetByAll();
+               
                 return Ok(clientes);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[ColaboradorController.GetColaboradorForAll] - Erro ao efetuar a busca de todos os colaboradores erro:{ex.Message}");
                 return StatusCode(500, ex);
             }
         }
