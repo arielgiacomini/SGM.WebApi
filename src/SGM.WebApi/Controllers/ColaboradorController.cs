@@ -47,7 +47,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
-                _logger.Information("[ColaboradorController.colaboradorID] -  Busca de um colaborador pelo Id");
+                _logger.Information($"[ColaboradorController.GetColaboradorById] -  Busca de um colaborador pelo Id {colaboradorId}");
 
                 var colaborador = _colaboradorServices.GetById(colaboradorId);
 
@@ -55,7 +55,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[ColaboradorController.colaboradorID] - Erro ao buscar um colaborador pelo ID erro:{ex.Message}");
+                _logger.Error(ex, $"[ColaboradorController.GetColaboradorById] - Erro ao buscar um colaborador pelo ID {colaboradorId} erro:{ex.Message}");
                 return StatusCode(500, ex);
             }
         }
