@@ -3,6 +3,7 @@ using Serilog;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
+using System.Security.Cryptography;
 
 namespace SGM.WebApi.Controllers
 {
@@ -46,11 +47,15 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information("[ColaboradorController.colaboradorID] -  Busca de um colaborador pelo Id");
+
                 var colaborador = _colaboradorServices.GetById(colaboradorId);
+
                 return Ok(colaborador);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[ColaboradorController.colaboradorID] - Erro ao buscar um colaborador pelo ID erro:{ex.Message}");
                 return StatusCode(500, ex);
             }
         }
