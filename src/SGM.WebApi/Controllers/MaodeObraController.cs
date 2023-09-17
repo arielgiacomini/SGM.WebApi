@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
-using SGM.Domain.Entities;
 using System;
 using System.Text.Json;
 
@@ -30,9 +29,9 @@ namespace SGM.WebApi.Controllers
             try
             {
                 _logger.Information($"[MaodeObra.GetFormaPagamentoForAll] - Solicitação para buscar forma mao de obra");
-               
+
                 var maoDeObra = _maodeObraServices.GetMaodeObraByAll();
-                
+
                 return Ok(maoDeObra);
 
             }
@@ -149,18 +148,18 @@ namespace SGM.WebApi.Controllers
 
         [HttpPut]
         [Route("mao-de-obra/inativar/{maoDeObraId}")]
-        public IActionResult InativarmaoDeObra(int maoDeObraId)
+        public IActionResult InativarMaoDeObra(int maoDeObraId)
         {
             try
             {
-               _logger.Information($"[MaodeObraController.InativarmaoDeObra] - Solicitação para InativarmaoDeObra: {maoDeObraId}");
+                _logger.Information($"[MaodeObraController.InativarMaoDeObra] - Solicitação para InativarmaoDeObra: {maoDeObraId}");
 
                 _maodeObraServices.InativarMaodeObra(maoDeObraId);
                 return Ok();
             }
             catch (Exception ex)
             {
-                _logger.Error(ex,$"[MaodeObraController.inativarCiente] - Erro ao InativarmaoDeObra: {ex.Message}");
+                _logger.Error(ex, $"[MaodeObraController.InativarMaoDeObra] - Erro ao InativarmaoDeObra: {ex.Message} Com IDmaodeobra {maoDeObraId}");
 
                 return StatusCode(500, ex);
             }
