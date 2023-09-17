@@ -49,9 +49,9 @@ namespace SGM.WebApi
             {
                 x.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Version = "7.3",
+                    Version = "7.6",
                     Title = "Exposição do banco de dados das aplicações do SGM",
-                    Description = "Essa API faz todos os cadastros pertinentes ao sistema SGM (Sistema Gerenciamento Mecânica) facilitando a utilização para qualquer tipo de plataforma",
+                    Description = "Nesta versão temos logs na forma de mao de obra controller - gabriel araújo",
                     TermsOfService = new Uri("http://arielgiacomini.com.br"),
                     Contact = new OpenApiContact
                     {

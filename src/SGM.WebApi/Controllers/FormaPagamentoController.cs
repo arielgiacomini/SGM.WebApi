@@ -9,10 +9,14 @@ namespace SGM.WebApi.Controllers
     [Produces("application/json")]
     public class FormaPagamentoController : ControllerBase
     {
+        private readonly Serilog.ILogger _logger;
         private readonly IFormaPagamentoServices _formaPagamentoServices;
 
-        public FormaPagamentoController(IFormaPagamentoServices formaPagamentoServices)
+
+        public FormaPagamentoController(Serilog.ILogger logger,
+            IFormaPagamentoServices formaPagamentoServices)
         {
+            _logger = logger;
             _formaPagamentoServices = formaPagamentoServices;
         }
 
@@ -22,11 +26,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[FormaPagamentoController.GetFormaPagamentoForAll] - Solicitação para buscar forma de pagamento");
+
                 var formaPagamento = _formaPagamentoServices.GetFormaPagamentoByAll();
+
                 return Ok(formaPagamento);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[GetFormaPagamentoForAll] - Erro ao buscar forma de pagamento Erro: {ex.Message} ");
+
                 return StatusCode(500, ex);
             }
         }
@@ -37,11 +46,14 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[FormaPagamentoController.GetFormaPagamentoForById] - Solicitação para buscar a forma de pagamento ID: {formaPagamentoId}");
+
                 var formaPagamento = _formaPagamentoServices.GetFormaPagamentoById(formaPagamentoId);
                 return Ok(formaPagamento);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[formaPagamentoId] - Erro ao solicitar a forma de pagamento ID : {formaPagamentoId} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
