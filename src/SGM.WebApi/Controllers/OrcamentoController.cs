@@ -10,10 +10,13 @@ namespace SGM.WebApi.Controllers
     [Produces("application/json")]
     public class OrcamentoController : ControllerBase
     {
+        private readonly Serilog.ILogger _logger;
         private readonly IOrcamentoServices _orcamentoServices;
 
-        public OrcamentoController(IOrcamentoServices orcamentoServices)
+        public OrcamentoController(Serilog.ILogger logger,
+            IOrcamentoServices orcamentoServices)
         {
+            _logger = logger;
             _orcamentoServices = orcamentoServices;
         }
 
@@ -23,11 +26,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.GetOrcamentosForAll] - Solicitação para buscar orcamento");
+
                 var orcamento = _orcamentoServices.GetOrcamentoByAll();
+
                 return Ok(orcamento);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.GetOrcamentosForAll] - Erro ao efetuar o orcamento {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
@@ -38,6 +46,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Error($"[OrcamentoController.GetUltimosOrcamentos] - Solicitação para buscar orcamentoultimosgerados: {quantidade}");
                 var count = _orcamentoServices.GetOrcamentoCount();
 
                 HttpContext.Response.Headers.Add("X-Total-Count", count.Contagem.ToString());
@@ -48,6 +57,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.GetUltimosOrcamentos] - Erro ao buscar orcamentoultimosgerados: {quantidade} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
