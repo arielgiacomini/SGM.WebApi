@@ -2,6 +2,7 @@
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
 using System;
+using System.Text.Json;
 
 namespace SGM.WebApi.Controllers
 {
@@ -68,11 +69,15 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.GetOrcamentosById] - Solicitação para buscar orcamentoID: {orcamentoId}");
+
                 var orcamento = _orcamentoServices.GetOrcamentoById(orcamentoId);
                 return Ok(orcamento);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.GetOrcamentosById] - Erro ao buscar orcamentoID: {orcamentoId} Erro: {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
@@ -83,11 +88,14 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.GetOrcamentoClienteVeiculoId] - Solicitação para buscar clienteVeiculoID: {clienteVeiculoId}");
+
                 var orcamento = _orcamentoServices.GetOrcamentoByClienteVeiculoId(clienteVeiculoId);
                 return Ok(orcamento);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.GetOrcamentoClienteVeiculoId] -  Erro ao buscar orcamentoClienteVeiculoID {clienteVeiculoId} Erro: {ex.Message}");
                 return StatusCode(500, ex);
             }
         }
@@ -98,6 +106,7 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.Salvar] - Solicitação para Salvar orcamento:  {JsonSerializer.Serialize(model)}");
                 var Id = _orcamentoServices.AtualizarOrSalvarOrcamento(model);
 
                 if (Id == 0)
@@ -109,6 +118,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.Salvar] -  Erro ao salvar orcamento Erro: {ex.Message} Com o objeto {JsonSerializer.Serialize(model)}");
                 return StatusCode(500, ex);
             }
         }
@@ -119,12 +129,15 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.Atualizar] - Solicitação para atualizar orcamentoID: {orcamentoId} Com o objeto {JsonSerializer.Serialize(model)}");
+
                 model.OrcamentoId = orcamentoId;
                 _orcamentoServices.AtualizarOrSalvarOrcamento(model);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.Atualizar] - Erro ao atualizar orcamentoID Erro:{orcamentoId} Com o objeto {JsonSerializer.Serialize(model)}");
                 return StatusCode(500, ex);
             }
         }
