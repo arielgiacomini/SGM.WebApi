@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SGM.ApplicationServices.Interfaces;
 using SGM.ApplicationServices.ViewModels;
+using SGM.Domain.Entities;
 using System;
 
 namespace SGM.WebApi.Controllers
@@ -10,7 +11,7 @@ namespace SGM.WebApi.Controllers
     [Produces("application/json")]
     public class PecaController : ControllerBase
     {
-
+        private readonly Serilog.ILogger _logger;
         private readonly IPecaServices _pecaServices;
 
         public PecaController(IPecaServices pecaServices)
@@ -24,11 +25,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[PecaController.GetOrcamentosForAll] - Orçamento de peças");
+
                 var peca = _pecaServices.GetPecaByAll();
+
                 return Ok(peca);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[PecaController.GetOrcamentosForAll] - Erro ao efetuar orçamento de peças erro:{ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
@@ -39,16 +45,22 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[PecaController.GetPecaForAllPaginado] - Busca de peças por pagina {page}");
+
                 var count = _pecaServices.GetPecaCount();
 
                 HttpContext.Response.Headers.Add("X-Total-Count", count.Contagem.ToString());
 
                 var pagina = page;
+
                 var peca = _pecaServices.GetPecaByAllPaginado(page);
+
                 return Ok(peca);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[PecaController.GetPecaForAllPaginado] - Erro ao buscar peça por pagina {page} erro:{ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
