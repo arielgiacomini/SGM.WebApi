@@ -173,7 +173,7 @@ namespace SGM.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                _logger.Error(ex, $"[OrcamentoController.SalvarOrcamentoPeca] - Erro ao salvarorcamentopeca Erro: {ex.Message} com o objeto {JsonSerializer.Serialize(model)}"); 
+                _logger.Error(ex, $"[OrcamentoController.SalvarOrcamentoPeca] - Erro ao salvarorcamentopeca Erro: {ex.Message} com o objeto {JsonSerializer.Serialize(model)}");
                 return StatusCode(500, ex);
             }
         }
@@ -184,11 +184,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.DeletarOrcamentoMaodeObra] - Solicitação para deletar DeletarOrcamentoMaodeObra: {model} com o objeto {JsonSerializer.Serialize(model)}");
                 _orcamentoServices.DeletarOrcamentoMaodeObra(model);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error($"[OrcamentoController.DeletarOrcamentoMaodeObra] - Erro ao deletar DeletarOrcamentoMaodeObra Erro: {ex.Message} com o objeto {JsonSerializer.Serialize(model)}");
                 return StatusCode(500, ex);
             }
         }
@@ -199,11 +201,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.DeletarOrcamentoPeca] - Solicitação para deletar  DeletarOrcamentoPeca: {model} com o objeto {JsonSerializer.Serialize(model)}");
                 _orcamentoServices.DeletarOrcamentoPeca(model);
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.DeletarOrcamentoPeca] - Erro ao deletar DeletarOrcamentoPeca Erro: {ex.Message} com o objeto {JsonSerializer.Serialize(model)}");
                 return StatusCode(500, ex);
             }
         }
@@ -214,11 +218,14 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.GetOrcamentoMaodeObraByOrcamentoId] - Solicitação para buscar GetOrcamentoMaodeObraByOrcamentoId: {orcamentoId} com o objeto {JsonSerializer.Serialize(model)}");
+
                 var orcamentoMaodeObra = _orcamentoServices.GetOrcamentoMaodeObraByOrcamentoId(orcamentoId);
                 return Ok(orcamentoMaodeObra);
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[OrcamentoController.GetOrcamentoMaodeObraByOrcamentoId] - Erro ao solicitar busca por GetOrcamentoMaodeObraByOrcamentoId Erro: {ex.Message} com o objeto {JsonSerializer.Serialize(model)}");
                 return StatusCode(500, ex);
             }
         }
@@ -229,12 +236,13 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[OrcamentoController.GetOrcamentoPecaByOrcamentoId] - Solicitação para buscar GetOrcamentoPecaByOrcamentoId: {orcamentoId} com o objeto {JsonSerializer.Serialize(model)}");
                 var orcamentoMaodeObra = _orcamentoServices.GetOrcamentoPecaByOrcamentoId(orcamentoId);
                 return Ok(orcamentoMaodeObra);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex);
+                _logger.Error(ex, $"[OrcamentoController.GetOrcamentoPecaByOrcamentoId] - Erro ao solicitar GetOrcamentoPecaByOrcamentoId Erro: {orcamentoId} com o objeto {JsonSerializer.Serialize(model)}");
             }
         }
     }
