@@ -134,12 +134,19 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[PecaController.Atualizar] - Solicitação ao Salvar uma peça: Erro: {pecaId} com as informações: {JsonSerializer.Serialize(model)}");
+
                 model.PecaId = pecaId;
+
                 _pecaServices.AtualizarOrSalvar(model);
+
                 return Ok();
             }
             catch (Exception ex)
+
             {
+                _logger.Error(ex, $"[PecaController.Atualizar] - Erro ao Atualizar uma peça: Erro: {ex.Message} com o objeto: {JsonSerializer.Serialize(model)}");
+
                 return StatusCode(500, ex);
             }
         }
@@ -150,11 +157,16 @@ namespace SGM.WebApi.Controllers
         {
             try
             {
+                _logger.Information($"[PecaController.InativarPeca] - Solicitação para inativar uma peça: {pecaId}");
+
                 _pecaServices.InativarPeca(pecaId);
+
                 return Ok();
             }
             catch (Exception ex)
             {
+                _logger.Error(ex, $"[PecaController.InativarPeca] - Erro ao Inativar uma Peça: Erro: {ex.Message}");
+
                 return StatusCode(500, ex);
             }
         }
